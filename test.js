@@ -91,14 +91,17 @@ module.exports.valid = valid;
 
 const base_url = 'https://www.abair.ie/api2/synthesise?';
 (async function() {
-  for(i of range(10,100)) {
-    const ps = ['mise '+ i,'tusa '+ i]
+  for(i of range(0,100)) {
+    const words = ['mise ','tusa ']
+    const test_text = words.map(s=>s+i)
+    const ps = test_text 
       .map(s => synthesiseSingleSentenceDNN({input: s}));
     const rs = await Promise.all(ps);
-    if (rs[0].audioContent === rs[1].audioContent) {
+    const audioContent = rs.map(r=>r.audioContent);
+    if (audioContent[0] === audioContent[1]) {
       console.log('ATTEMPT '+ i + ' GAVE SAME AUDIO');
-      fs.writeFile('attempt/'+i+'_mise',rs[0],(err)=>{});
-      fs.writeFile('attempt/'+i+'_tusa',rs[1],(err)=>{});
+      fs.writeFile('attempt/mise_'+i,rs[0],(err)=>{});
+      fs.writeFile('attempt/tusa_'+i,rs[1],(err)=>{});
     }
   }
 })();
