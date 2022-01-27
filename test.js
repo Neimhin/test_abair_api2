@@ -4,6 +4,7 @@ function* range(start, end) {
     }
 }
 
+process = require('process');
 fs = require('fs');
 url = require('url');
 request = require('request');
@@ -76,7 +77,6 @@ function synthesiseSingleSentenceDNN(query) {
       qs: query,
       method: 'GET', },
       (err, res, body) => {
-        console.log(res.url);
         if (err)
           return reject({error: err, response: res, body: body});
         return resolve(body);
@@ -97,9 +97,11 @@ const base_url = 'https://www.abair.ie/api2/synthesise?';
     const ps = test_text 
       .map(s => synthesiseSingleSentenceDNN({input: s}));
     const rs = await Promise.all(ps);
-    const audioContent = rs.map(r=>r.audioContent);
-    if (audioContent[0] === audioContent[1]) {
+    const audioContent = rs.map(r=>JSON.parse(r).audioContent);
+    if (audioContent[0] && audioContent[1] && audioContent[0] === audioContent[1]) {
       console.log('ATTEMPT '+ i + ' GAVE SAME AUDIO');
+      console.log(audioContent[0].slice(1000,1080));
+      console.log(audioContent[1].slice(1000,1080));
       fs.writeFile('attempt/mise_'+i,rs[0],(err)=>{});
       fs.writeFile('attempt/tusa_'+i,rs[1],(err)=>{});
     }
