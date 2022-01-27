@@ -7,19 +7,19 @@
     },
     {
       "word": "tusa",
-      "end": 0.695
+      "end": 0
     },
     {
       "word": "a",
-      "end": 0.725
+      "end": 0
     },
     {
       "word": "ceathair",
-      "end": 1.115
+      "end": 0
     },
     {
       "word": "SILENCE_TOKEN",
-      "end": 1.115
+      "end": 0
     }
   ]
 }

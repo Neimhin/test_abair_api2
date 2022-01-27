@@ -7,19 +7,19 @@
     },
     {
       "word": "mise",
-      "end": 0.535
+      "end": 0
     },
     {
       "word": "a",
-      "end": 0.56
+      "end": 0
     },
     {
       "word": "haon",
-      "end": 0.89
+      "end": 0
     },
     {
       "word": "SILENCE_TOKEN",
-      "end": 0.89
+      "end": 0
     }
   ]
 }
