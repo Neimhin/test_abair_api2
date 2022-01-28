@@ -12,12 +12,12 @@ request = require('request');
 const permitted = {
   voice: {
   'ga_UL':              1,
-  'ga_UL_anb_exthts':   2,
+  // 'ga_UL_anb_exthts':   2,
   'ga_UL_anb_nnmnkwii': 3,
   'ga_CO':              4,
-  'ga_CO_hts':          5,
+  // 'ga_CO_hts':          5,
   'ga_CO_pmg_nnmnkwii': 6,
-  'ga_MU_nnc_exthts':   7,
+  // 'ga_MU_nnc_exthts':   7,
   'ga_MU_nnc_nnmnkwii': 8,
   'ga_MU_cmg_nnmnkwii': 9,
   },
@@ -91,19 +91,25 @@ module.exports.valid = valid;
 
 const base_url = 'https://www.abair.ie/api2/synthesise?';
 (async function() {
-  for(i of range(0,100)) {
-    const words = ['mise ','tusa ']
-    const test_text = words.map(s=>s+i)
-    const ps = test_text 
-      .map(s => synthesiseSingleSentenceDNN({input: s}));
-    const rs = await Promise.all(ps);
-    const audioContent = rs.map(r=>JSON.parse(r).audioContent);
-    if (audioContent[0] && audioContent[1] && audioContent[0] === audioContent[1]) {
-      console.log('ATTEMPT '+ i + ' GAVE SAME AUDIO');
-      console.log(audioContent[0].slice(1000,1080));
-      console.log(audioContent[1].slice(1000,1080));
-      fs.writeFile('attempt/mise_'+i,rs[0],(err)=>{});
-      fs.writeFile('attempt/tusa_'+i,rs[1],(err)=>{});
+  for(const voice of Object.keys(permitted.voice)) {
+    console.log(voice);
+    for(i of range(0,3)) {
+      const words = ['mise ','tusa ']
+      const test_text = words.map(s=>s+i)
+      const ps = test_text 
+        .map(s => synthesiseSingleSentenceDNN({input: s, voice: voice}));
+      const rs = await Promise.all(ps);
+      const audioContent = rs.map(r=>JSON.parse(r).audioContent);
+      if (audioContent[0] && audioContent[1] && audioContent[0] === audioContent[1]) {
+        console.log('ATTEMPT '+ i + ' GAVE SAME AUDIO');
+        console.log(audioContent[0].slice(1000,1080));
+        console.log(audioContent[1].slice(1000,1080));
+        fs.writeFile('attempt/mise_'+i,rs[0],(err)=>{});
+        fs.writeFile('attempt/tusa_'+i,rs[1],(err)=>{});
+      }
+      else {
+        console.log('ATTEMPT '+ i + ' OK');
+      }
     }
   }
 })();
